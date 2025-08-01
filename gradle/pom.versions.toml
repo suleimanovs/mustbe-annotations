@@ -1,0 +1,23 @@
+[versions]
+projectVersion = "0.0.1"
+inceptionYear = "2024"
+group = "com.suleimanov.kotlin"
+# Project metadata
+name = "MustBe"
+description = "MustBe KSP validation library"
+url = "https://github.com/suleimanovs/mustbe-annotations"
+
+# License
+licenseName = "MIT License"
+licenseUrl = "https://opensource.org/licenses/MIT"
+licenseDist = "repo"
+
+# Developer
+developerId = "suleimanov"
+developerName = "Osman Suleimanov"
+developerUrl = "https://github.com/suleimanovs"
+
+# SCM
+scmUrl = "https://github.com/suleimanovs/mustbe-annotations"
+scmConnection = "scm:git:git://github.com/suleimanovs/mustbe-annotations.git"
+scmDevConnection = "scm:git:ssh://git@github.com:suleimanovs/mustbe-annotations.git" 
