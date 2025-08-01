@@ -8,6 +8,7 @@ on:
       - 'gradle/pom.versions.toml'
       - 'build.gradle.kts'
       - 'mustbe-*/build.gradle.kts'
+  workflow_dispatch:
 
 jobs:
   check-version:
@@ -25,7 +26,7 @@ jobs:
         id: check
         run: |
           # Получаем текущую версию из TOML
-          CURRENT_VERSION=$(grep 'projectVersion =' gradle/pom.versions.toml | cut -d'"' -f2)
+          CURRENT_VERSION=$(grep 'projectVersion =' gradle/pom.versions.toml | sed 's/.*projectVersion = "\(.*\)"/\1/')
           echo "Current version: $CURRENT_VERSION"
           
           # Получаем последний тег
@@ -65,12 +66,9 @@ jobs:
         env:
           MAVEN_CENTRAL_USERNAME: ${{ env.OSSRH_USERNAME }}
           MAVEN_CENTRAL_PASSWORD: ${{ env.OSSRH_PASSWORD }}
-          SIGNING_KEY_ID: ${{ env.GPG_KEY_ID }}
-          SIGNING_PASSWORD: ${{ env.GPG_PASSPHRASE }}
-          SIGNING_SECRET_KEY: ${{ env.GPG_PRIVATE_KEY }}
         run: |
-          echo "$SIGNING_SECRET_KEY" > mustbe_private.asc
-          ./gradlew publishToMavenCentral
+          ./gradlew :mustbe-annotations:build :mustbe-processor:build
+          ./gradlew publishAllPublicationsToMavenCentralRepository
 
       - name: Create Git Tag
         run: |
@@ -79,11 +77,13 @@ jobs:
           git config --local user.name "GitHub Action"
           git tag -a "v$VERSION" -m "Release v$VERSION"
           git push origin "v$VERSION"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ env.TOKEN_GITHUB }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ needs.check-version.outputs.version }}
           release_name: Release v${{ needs.check-version.outputs.version }}

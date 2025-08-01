@@ -1,7 +1,8 @@
 [versions]
-projectVersion = "0.0.1"
+projectVersion = "0.0.2"
 inceptionYear = "2024"
 group = "com.suleimanov.kotlin"
+
 # Project metadata
 name = "MustBe"
 description = "MustBe KSP validation library"
